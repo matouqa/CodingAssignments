@@ -1,0 +1,92 @@
+#Flexible Data Formats Practice
+#Q1: Write a query to format the view_item event into a table with the appropriate columns
+#Starter Code:
+SELECT
+*
+FROM
+  dsv1069.events
+WHERE
+  event_name = 'view_item'
+
+#Q1 Solution:
+SELECT
+  event_id,
+  user_id,
+  event_name,
+  event_time
+FROM dsv1069.events
+WHERE event_name = 'view_item';
+
+#Q2: Write a query to format the view_item event into a table with the appropriate columns (This replicates what we had in the slides, but it is missing a column)
+#Starter Code:
+SELECT
+  event_id,
+  event_time,
+  user_id,
+  platform,
+  (CASE WHEN parameter_name = 'item_id'
+        THEN CAST(parameter_value AS INT)
+        ELSE NULL
+        END) AS item_id
+FROM dsv1069.events
+WHERE
+  event_name = 'view_item'
+ORDER BY event_id
+
+#Q2 Solution:
+SELECT
+    event_id,
+    event_time,
+    user_id,
+    platform,
+    (CASE 
+        WHEN parameter_name = 'item_id'
+        THEN CAST(parameter_value AS INT)
+        ELSE NULL
+    END) AS item_id,
+    'view_item' AS event_name
+FROM dsv1069.events
+WHERE event_name = 'view_item'
+ORDER BY event_id;
+
+#Q3: Use the result from the previous exercise, but make sure
+#Starter Code:
+SELECT
+  event_id,
+  event_time,
+  user_id,
+  platform,
+  (CASE WHEN parameter_name = 'item_id'
+        THEN CAST(parameter_value AS INT)
+        ELSE NULL
+  END) AS item_id,
+  (CASE WHEN parameter_name = 'referrer'
+        THEN parameter_value
+        ELSE NULL
+  END) AS referrer
+FROM dsv1069.events
+WHERE event_name = 'view_item'
+ORDER BY event_id
+
+#Q3 Solution:
+SELECT
+  event_id,
+  event_time,
+  user_id,
+  platform,
+  (CASE WHEN parameter_name = 'item_id'
+        THEN CAST(parameter_value AS INT)
+        ELSE NULL
+  END) AS item_id,
+  (CASE WHEN parameter_name = 'referrer'
+        THEN parameter_value
+        ELSE NULL
+  END) AS referrer
+FROM dsv1069.events
+WHERE event_name = 'view_item'
+ORDER BY event_id
+GROUP BY
+  event_id,
+  event_time,
+  user_id,
+  platform;
